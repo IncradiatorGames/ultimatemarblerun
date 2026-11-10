@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultimate Marble Run - a shared machine</title>
+<style>
+  body { margin: 0; font-family: system-ui, sans-serif; background: #2b1250; color: #fff; text-align: center; }
+  main { max-width: 480px; margin: 0 auto; padding: 48px 16px; }
+  h1 { font-size: 28px; margin: 0 0 12px; }
+  p { color: #e8dcff; line-height: 1.5; }
+  a.button { display: inline-block; margin: 12px 6px; padding: 14px 24px; border-radius: 14px; border: 3px solid #ff73cc;
+             background: #1a0a33; color: #fff; text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Someone shared a marble machine with you!</h1>
+  <p id="msg">Opening it in Ultimate Marble Run...</p>
+  <a class="button" id="open" href="#">Open in the game</a>
+  <a class="button" id="get" href="#">Get the game</a>
+</main>
+<script>
+  // a shared machine's link: https://incradiatorgames.github.io/m/?id=MACHINE_ID
+  var pkg = "com.IncradiatorGames.UltimateMarbleMaker";
+  var store = "https://play.google.com/store/apps/details?id=" + pkg;
+  var id = (new URLSearchParams(location.search).get("id") || "").replace(/[^A-Za-z0-9_-]/g, "");
+  var app = "ultimatemarblerun://machine?id=" + id;
+  var android = /Android/i.test(navigator.userAgent);
+  // Android: an intent link opens the game if it's installed, the Play Store if not
+  var open = android ? "intent://machine?id=" + id + "#Intent;scheme=ultimatemarblerun;package=" + pkg +
+             ";S.browser_fallback_url=" + encodeURIComponent(store) + ";end" : app;
+  document.getElementById("open").href = open;
+  document.getElementById("get").href = store;
+  if (!id) document.getElementById("msg").textContent = "This link is missing its machine. Ask for the link again.";
+  else if (android) location.href = open;
+  else document.getElementById("msg").textContent = "Open this link on your Android phone to play the machine.";
+</script>
+</body>
+</html>
